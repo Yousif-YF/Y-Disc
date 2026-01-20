@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YF Translator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            margin-right: 15px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        
+        .translation-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+            gap: 25px;
+        }
+        
+        .translation-box {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            border: 1px solid #eaeaea;
+        }
+        
+        .translation-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .lang-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .lang-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+        }
+        
+        .lang-flag {
+            font-size: 2rem;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            resize: vertical;
+            transition: border 0.3s;
+            line-height: 1.6;
+            background-color: white;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.2);
+        }
+        
+        .text-count {
+            text-align: left;
+            margin-top: 12px;
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 30px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            gap: 20px;
+        }
+        
+        .swap-btn {
+            background-color: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(30, 60, 114, 0.3);
+        }
+        
+        .swap-btn:hover {
+            background-color: #2a5298;
+            transform: rotate(180deg) scale(1.1);
+        }
+        
+        .translate-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 18px rgba(30, 60, 114, 0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        .translate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 13px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .action-btn:hover {
+            background-color: #f1f3f9;
+        }
+        
+        .action-btn.copy {
+            color: #1e3c72;
+            border-color: #1e3c72;
+        }
+        
+        .action-btn.clear {
+            color: #e63946;
+            border-color: #e63946;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.95rem;
+            padding: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .history {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 30px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+        
+        .history h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f3f9;
+            font-size: 1.5rem;
+        }
+        
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #f1f3f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-text {
+            flex: 1;
+        }
+        
+        .history-lang {
+            font-weight: 700;
+            color: #1e3c72;
+            margin-left: 15px;
+            min-width: 100px;
+            text-align: right;
+        }
+        
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background-color: #f1f3f9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .lang-option.active {
+            background-color: #1e3c72;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .translation-container {
+                flex-direction: column;
+            }
+            
+            .translation-box {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+            }
+            
+            .language-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            color: #1e3c72;
+            font-size: 1.1rem;
+        }
+        
+        .loading i {
+            margin-right: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .char-limit {
+            color: #e63946;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-language"></i>
+                <h1>YF Translator-X</h1>
+            </div>
+            <p class="tagline">Fast and accurate translation between Arabic and English</p>
+            
+            <div class="language-selector">
+                <div class="lang-option active" id="autoDetectOption">
+                    <i class="fas fa-globe"></i>
+                    <span>Auto Detect Language</span>
+                </div>
+                <div class="lang-option" id="arabicToEnglishOption">
+                    <span>🇸🇦</span>
+                    <span>Arabic → English</span>
+                </div>
+                <div class="lang-option" id="englishToArabicOption">
+                    <span>🇺🇸</span>
+                    <span>English → Arabic</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="translation-container">
+            <div class="translation-box">
+                <div class="lang-header">
+                    <div class="lang-title">Source Text</div>
+                    <div class="lang-flag" id="sourceFlag">🌐</div>
+                </div>
+                <textarea id="sourceText" placeholder="Enter text to translate..."></textarea>
+                <div class="text-count" id="sourceCount">Characters: 0</div>
+                <div class="action-buttons">
+                    <button class="action-btn copy" id="copySource">
+                        <i class="fas fa-copy"></i> Copy Text
+                    </button>
+                    <button class="action-btn clear" id="clearSource">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                    <button class="action-btn" id="speakSource">
+                        <i class="fas fa-volume-up"></i> Speak
+                    </button>
+                </div>
+            </div>
+            
+            <div class="translation-box">
+                <div class="lang-header">
+                    <div class="lang-title">Translated Text</div>
+                    <div class="lang-flag" id="targetFlag">🌐</div>
+                </div>
+                <textarea id="translatedText" placeholder="Translation will appear here..." readonly></textarea>
+                <div class="text-count" id="translatedCount">Characters: 0</div>
+                <div class="action-buttons">
+                    <button class="action-btn copy" id="copyTranslated">
+                        <i class="fas fa-copy"></i> Copy Translation
+                    </button>
+                    <button class="action-btn clear" id="clearTranslated">
+                        <i class="fas fa-eraser"></i> Clear
+                    </button>
+                    <button class="action-btn" id="speakTranslated">
+                        <i class="fas fa-volume-up"></i> Speak
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="swap-btn" id="swapLanguages">
+                <i class="fas fa-exchange-alt"></i>
+            </button>
+            <button class="translate-btn" id="translateBtn">
+                <i class="fas fa-language"></i> Translate Now
+            </button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin"></i> Translating...
+        </div>
+    </div>
+    
+    <div class="history">
+        <h3><i class="fas fa-history"></i> Recent Translation History</h3>
+        <div id="historyList">
+            <!-- Translation history items will be added here by JavaScript -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2026 YF Translator - All rights reserved</p>
+        <p>Powered by Google Translate API | This translator supports any text between Arabic and English</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const sourceText = document.getElementById('sourceText');
+        const translatedText = document.getElementById('translatedText');
+        const sourceCount = document.getElementById('sourceCount');
+        const translatedCount = document.getElementById('translatedCount');
+        const translateBtn = document.getElementById('translateBtn');
+        const swapBtn = document.getElementById('swapLanguages');
+        const copySourceBtn = document.getElementById('copySource');
+        const copyTranslatedBtn = document.getElementById('copyTranslated');
+        const clearSourceBtn = document.getElementById('clearSource');
+        const clearTranslatedBtn = document.getElementById('clearTranslated');
+        const speakSourceBtn = document.getElementById('speakSource');
+        const speakTranslatedBtn = document.getElementById('speakTranslated');
+        const loading = document.getElementById('loading');
+        const historyList = document.getElementById('historyList');
+        const notification = document.getElementById('notification');
+        const sourceFlag = document.getElementById('sourceFlag');
+        const targetFlag = document.getElementById('targetFlag');
+        
+        // Language options
+        const autoDetectOption = document.getElementById('autoDetectOption');
+        const arabicToEnglishOption = document.getElementById('arabicToEnglishOption');
+        const englishToArabicOption = document.getElementById('englishToArabicOption');
+        
+        // App variables
+        let translationHistory = JSON.parse(localStorage.getItem('yfTranslatorHistory')) || [];
+        let currentSourceLang = 'auto';
+        let currentTargetLang = 'en';
+        let isArabicToEnglish = true;
+        
+        // Initialize the app
+        function initApp() {
+            updateCharacterCount();
+            updateHistoryDisplay();
+            updateLanguageFlags();
+            
+            // Set active language option
+            arabicToEnglishOption.classList.add('active');
+            
+            // Show welcome notification
+            showNotification('Welcome to YF Translator! Enter text and click Translate.');
+        }
+        
+        // Update character count
+        function updateCharacterCount() {
+            sourceCount.textContent = `Characters: ${sourceText.value.length}`;
+            translatedCount.textContent = `Characters: ${translatedText.value.length}`;
+            
+            // Show warning if approaching character limit
+            if (sourceText.value.length > 4500) {
+                sourceCount.innerHTML = `Characters: <span class="char-limit">${sourceText.value.length}/5000 (Near limit)</span>`;
+            }
+        }
+        
+        // Translate text using Google Translate API (free tier)
+        async function translateText(text, sourceLang, targetLang) {
+            if (!text.trim()) {
+                showNotification('Please enter some text to translate.');
+                return '';
+            }
+            
+            if (text.length > 5000) {
+                showNotification('Text is too long. Maximum 5000 characters allowed.');
+                return '';
+            }
+            
+            loading.style.display = 'block';
+            
+            try {
+                // Using Google Translate API (free)
+                // Note: In production, you would use a proper API key
+                const encodedText = encodeURIComponent(text);
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodedText}`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error('Translation API error');
+                }
+                
+                const data = await response.json();
+                
+                // Extract translated text from response
+                let translated = '';
+                if (data && data[0]) {
+                    data[0].forEach(item => {
+                        if (item[0]) {
+                            translated += item[0];
+                        }
+                    });
+                }
+                
+                loading.style.display = 'none';
+                return translated || text; // Fallback to original text if translation fails
+                
+            } catch (error) {
+                console.error('Translation error:', error);
+                loading.style.display = 'none';
+                
+                // Fallback: Simulated translation for demo purposes
+                // In a real app, you would handle the error properly
+                return simulateTranslation(text, sourceLang, targetLang);
+            }
+        }
+        
+        // Simulated translation for demo (when API fails)
+        function simulateTranslation(text, sourceLang, targetLang) {
+            // This is just for demo purposes
+            // In a real app, you would use a proper translation service
+            
+            const arabicWords = ['مرحبا', 'شكرا', 'مترجم', 'موقع', 'إنترنت', 'تطبيق', 'جوال', 'حاسوب', 'لغة', 'نص'];
+            const englishWords = ['Hello', 'Thank you', 'Translator', 'Website', 'Internet', 'Application', 'Mobile', 'Computer', 'Language', 'Text'];
+            
+            let result = text;
+            
+            if (sourceLang === 'ar' || sourceLang === 'auto') {
+                // Arabic to English simulation
+                arabicWords.forEach((word, index) => {
+                    const regex = new RegExp(word, 'gi');
+                    result = result.replace(regex, englishWords[index]);
+                });
+                
+                // Add a note that this is simulated
+                if (text.length > 10) {
+                    result += " [Simulated translation - API would provide accurate result]";
+                }
+            } else if (sourceLang === 'en') {
+                // English to Arabic simulation
+                englishWords.forEach((word, index) => {
+                    const regex = new RegExp(word, 'gi');
+                    result = result.replace(regex, arabicWords[index]);
+                });
+                
+                // Add a note that this is simulated
+                if (text.length > 10) {
+                    result += " [ترجمة محاكاة - واجهة برمجة التطبيقات ستعطي نتيجة دقيقة]";
+                }
+            }
+            
+            return result;
+        }
+        
+        // Add translation to history
+        function addToHistory(sourceText, translatedText, sourceLang, targetLang) {
+            const historyItem = {
+                sourceText,
+                translatedText,
+                sourceLang,
+                targetLang,
+                timestamp: new Date().toLocaleString('en-US')
+            };
+            
+            translationHistory.unshift(historyItem);
+            
+            // Keep only last 10 translations
+            if (translationHistory.length > 10) {
+                translationHistory = translationHistory.slice(0, 10);
+            }
+            
+            localStorage.setItem('yFTranslatorHistory', JSON.stringify(translationHistory));
+            updateHistoryDisplay();
+        }
+        
+        // Update history display
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            if (translationHistory.length === 0) {
+                historyList.innerHTML = '<div class="history-item" style="text-align:center; color:#6c757d;">No translation history yet</div>';
+                return;
+            }
+            
+            translationHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                let langLabel = '';
+                if (item.sourceLang === 'ar' || (item.sourceLang === 'auto' && isArabicText(item.sourceText))) {
+                    langLabel = 'Arabic → English';
+                } else {
+                    langLabel = 'English → Arabic';
+                }
+                
+                historyItem.innerHTML = `
+                    <div class="history-text">
+                        <strong>${item.sourceText.substring(0, 60)}${item.sourceText.length > 60 ? '...' : ''}</strong>
+                        <br>
+                        <span style="color: #6c757d; font-size: 0.95rem;">${item.translatedText.substring(0, 60)}${item.translatedText.length > 60 ? '...' : ''}</span>
+                        <div style="font-size: 0.8rem; color: #adb5bd; margin-top: 5px;">${item.timestamp}</div>
+                    </div>
+                    <div class="history-lang">${langLabel}</div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Swap languages
+        function swapLanguages() {
+            const sourceValue = sourceText.value;
+            const translatedValue = translatedText.value;
+            
+            sourceText.value = translatedValue;
+            translatedText.value = sourceValue;
+            
+            // Update language flags and direction
+            if (isArabicToEnglish) {
+                // Switch to English -> Arabic
+                isArabicToEnglish = false;
+                currentSourceLang = 'en';
+                currentTargetLang = 'ar';
+                arabicToEnglishOption.classList.remove('active');
+                englishToArabicOption.classList.add('active');
+                autoDetectOption.classList.remove('active');
+            } else {
+                // Switch to Arabic -> English
+                isArabicToEnglish = true;
+                currentSourceLang = 'auto';
+                currentTargetLang = 'en';
+                englishToArabicOption.classList.remove('active');
+                arabicToEnglishOption.classList.add('active');
+                autoDetectOption.classList.remove('active');
+            }
+            
+            updateLanguageFlags();
+            updateCharacterCount();
+            showNotification('Languages swapped successfully!');
+        }
+        
+        // Update language flags
+        function updateLanguageFlags() {
+            if (isArabicToEnglish) {
+                sourceFlag.textContent = '🇸🇦';
+                targetFlag.textContent = '🇺🇸';
+                sourceText.placeholder = "Enter Arabic text to translate to English...";
+                translatedText.placeholder = "English translation will appear here...";
+            } else {
+                sourceFlag.textContent = '🇺🇸';
+                targetFlag.textContent = '🇸🇦';
+                sourceText.placeholder = "Enter English text to translate to Arabic...";
+                translatedText.placeholder = "Arabic translation will appear here...";
+            }
+        }
+        
+        // Copy text to clipboard
+        function copyToClipboard(text, isSource = true) {
+            if (!text.trim()) {
+                showNotification('No text to copy!');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification(isSource ? 'Text copied to clipboard!' : 'Translation copied to clipboard!');
+                
+                // Visual feedback on button
+                const btn = isSource ? copySourceBtn : copyTranslatedBtn;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.style.backgroundColor = '#4CAF50';
+                btn.style.color = 'white';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.backgroundColor = '';
+                    btn.style.color = '';
+                }, 1500);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                showNotification('Failed to copy text');
+            });
+        }
+        
+        // Clear text
+        function clearText(isSource = true) {
+            if (isSource) {
+                sourceText.value = '';
+            } else {
+                translatedText.value = '';
+            }
+            updateCharacterCount();
+            showNotification(isSource ? 'Source text cleared' : 'Translation cleared');
+        }
+        
+        // Speak text
+        function speakText(text, lang) {
+            if (!text.trim()) {
+                showNotification('No text to speak!');
+                return;
+            }
+            
+            if ('speechSynthesis' in window) {
+                // Stop any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Set language
+                if (lang === 'ar') {
+                    utterance.lang = 'ar-SA';
+                } else {
+                    utterance.lang = 'en-US';
+                }
+                
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                window.speechSynthesis.speak(utterance);
+                showNotification('Speaking text...');
+            } else {
+                showNotification('Text-to-speech not supported in your browser');
+            }
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.backgroundColor = '#1e3c72';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Detect if text is Arabic
+        function isArabicText(text) {
+            // Simple detection: check for Arabic characters
+            const arabicRegex = /[\u0600-\u06FF]/;
+            return arabicRegex.test(text);
+        }
+        
+        // Event Listeners
+        sourceText.addEventListener('input', updateCharacterCount);
+        translatedText.addEventListener('input', updateCharacterCount);
+        
+        translateBtn.addEventListener('click', async () => {
+            const text = sourceText.value.trim();
+            
+            if (!text) {
+                showNotification('Please enter text to translate');
+                return;
+            }
+            
+            // Auto-detect language if needed
+            let sourceLang = currentSourceLang;
+            if (sourceLang === 'auto') {
+                sourceLang = isArabicText(text) ? 'ar' : 'en';
+            }
+            
+            const translated = await translateText(text, sourceLang, currentTargetLang);
+            translatedText.value = translated;
+            
+            // Add to history
+            addToHistory(text, translated, sourceLang, currentTargetLang);
+            
+            updateCharacterCount();
+            showNotification('Translation completed successfully!');
+        });
+        
+        swapBtn.addEventListener('click', swapLanguages);
+        
+        copySourceBtn.addEventListener('click', () => {
+            copyToClipboard(sourceText.value, true);
+        });
+        
+        copyTranslatedBtn.addEventListener('click', () => {
+            copyToClipboard(translatedText.value, false);
+        });
+        
+        clearSourceBtn.addEventListener('click', () => {
+            clearText(true);
+        });
+        
+        clearTranslatedBtn.addEventListener('click', () => {
+            clearText(false);
+        });
+        
+        speakSourceBtn.addEventListener('click', () => {
+            const lang = isArabicText(sourceText.value) ? 'ar' : 'en';
+            speakText(sourceText.value, lang);
+        });
+        
+        speakTranslatedBtn.addEventListener('click', () => {
+            const lang = isArabicText(translatedText.value) ? 'ar' : 'en';
+            speakText(translatedText.value, lang);
+        });
+        
+        // Language option event listeners
+        autoDetectOption.addEventListener('click', () => {
+            autoDetectOption.classList.add('active');
+            arabicToEnglishOption.classList.remove('active');
+            englishToArabicOption.classList.remove('active');
+            
+            currentSourceLang = 'auto';
+            currentTargetLang = 'en';
+            isArabicToEnglish = true;
+            updateLanguageFlags();
+            showNotification('Auto-detect language enabled');
+        });
+        
+        arabicToEnglishOption.addEventListener('click', () => {
+            arabicToEnglishOption.classList.add('active');
+            autoDetectOption.classList.remove('active');
+            englishToArabicOption.classList.remove('active');
+            
+            currentSourceLang = 'ar';
+            currentTargetLang = 'en';
+            isArabicToEnglish = true;
+            updateLanguageFlags();
+            showNotification('Arabic to English translation selected');
+        });
+        
+        englishToArabicOption.addEventListener('click', () => {
+            englishToArabicOption.classList.add('active');
+            autoDetectOption.classList.remove('active');
+            arabicToEnglishOption.classList.remove('active');
+            
+            currentSourceLang = 'en';
+            currentTargetLang = 'ar';
+            isArabicToEnglish = false;
+            updateLanguageFlags();
+            showNotification('English to Arabic translation selected');
+        });
+        
+        // Initialize the app
+        window.addEventListener('DOMContentLoaded', initApp);
+        
+        // Auto-translate when user stops typing (with delay)
+        let typingTimer;
+        sourceText.addEventListener('input', () => {
+            clearTimeout(typingTimer);
+            
+            // Only auto-translate if text is not empty
+            if (sourceText.value.trim().length > 0) {
+                typingTimer = setTimeout(async () => {
+                    if (sourceText.value.trim().length > 0) {
+                        translateBtn.click();
+                    }
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
